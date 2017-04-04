@@ -121,6 +121,7 @@ public class ClientService {
         player.getId(),
         player.getLogin(),
         player.getCountry(),
+        player.getTimezone(),
         new UserDetailsResponse.Player(
           globalRating.orElse(null),
           ladder1v1Rating.orElse(null),

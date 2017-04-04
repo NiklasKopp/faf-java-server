@@ -3,6 +3,7 @@ package com.faforever.server.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -48,4 +49,8 @@ public abstract class Login {
 
   @Transient
   private String country;
+
+  @Transient
+  @Nullable
+  private String timezone;
 }

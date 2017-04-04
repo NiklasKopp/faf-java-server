@@ -13,6 +13,7 @@ public class UserDetailsResponse implements ServerMessage {
   private final int userId;
   private final String username;
   private final String country;
+  private final String timezone;
   private final Player player;
 
   @Data
