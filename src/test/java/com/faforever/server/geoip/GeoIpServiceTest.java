@@ -29,7 +29,7 @@ public class GeoIpServiceTest {
 
     ServerProperties properties = new ServerProperties();
     GeoIp geoIp = properties.getGeoIp();
-    geoIp.setDatabaseUrl(getClass().getResource("/geoip/GeoLite2-Country.mmdb.gz").toURI().toString());
+    geoIp.setDatabaseUrl(getClass().getResource("/geoip/GeoLite2-City.mmdb.gz").toURI().toString());
     geoIp.setDatabaseFile(databaseFile);
 
     instance = new GeoIpService(properties);
@@ -48,6 +48,25 @@ public class GeoIpServiceTest {
   @Test
   public void lookupCountryLoopbackReturnsEmpty() throws Exception {
     Optional<String> result = instance.lookupCountryCode(InetAddress.getLoopbackAddress());
+    assertThat(result.isPresent(), is(false));
+  }
+
+  @Test
+  public void lookupTimezone() throws Exception {
+    //Timezone data is not availabe for all ip adresses, alternatively use MaxMind server (108.168.255.243)
+    Optional<String> timezone = instance.lookupTimezone(InetAddress.getByName("85.214.28.212"));
+    assertThat(timezone.get(), is("Europe/Berlin"));
+  }
+
+  @Test
+  public void lookupTimezoneUnknownReturnsEmpty() throws Exception {
+    Optional<String> result = instance.lookupTimezone(InetAddress.getByName("192.203.230.10"));
+    assertThat(result.isPresent(), is(false));
+  }
+
+  @Test
+  public void lookupTimezoneLoopbackReturnsEmpty() throws Exception {
+    Optional<String> result = instance.lookupTimezone(InetAddress.getLoopbackAddress());
     assertThat(result.isPresent(), is(false));
   }
 }

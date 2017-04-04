@@ -5,7 +5,9 @@ import com.faforever.server.config.ServerProperties.GeoIp;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.DatabaseReader.Builder;
 import com.maxmind.geoip2.exception.AddressNotFoundException;
+import com.maxmind.geoip2.model.CityResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -63,10 +65,36 @@ public class GeoIpService {
   }
 
   public Optional<String> lookupCountryCode(InetAddress inetAddress) {
+    Optional<CityResponse> city = lookupCity(inetAddress);
+    return city.isPresent() ? Optional.of(city.get().getCountry().getIsoCode()) : Optional.empty();
+  }
+
+  /**
+   * @return Time zone code as specified by the IANA
+   */
+  public Optional<String> lookupTimezone(InetAddress inetAddress) {
+    Optional<CityResponse> city = lookupCity(inetAddress);
+
+    if (!city.isPresent()) {
+      return Optional.empty();
+    } else {
+      return noCatch(() -> {
+        JSONObject cityLocation = new JSONObject(city.get().toJson()).getJSONObject("location");
+        if (cityLocation.has("time_zone")) {
+          return Optional.of(cityLocation.getString("time_zone"));
+        } else {
+          log.warn("No timezone entry for adress: {}", inetAddress);
+          return Optional.empty();
+        }
+      });
+    }
+  }
+
+  private Optional<CityResponse> lookupCity(InetAddress inetAddress) {
     Assert.state(databaseReader != null, "Database has not been initialized");
     return noCatch(() -> {
       try {
-        return Optional.of(databaseReader.country(inetAddress).getCountry().getIsoCode());
+        return Optional.of(databaseReader.city(inetAddress));
       } catch (AddressNotFoundException e) {
         log.warn("No entry for address: {}", inetAddress);
         return Optional.empty();
