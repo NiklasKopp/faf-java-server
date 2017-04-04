@@ -7,7 +7,6 @@ import com.maxmind.geoip2.DatabaseReader.Builder;
 import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.model.CityResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -79,13 +78,7 @@ public class GeoIpService {
       return Optional.empty();
     } else {
       return noCatch(() -> {
-        JSONObject cityLocation = new JSONObject(city.get().toJson()).getJSONObject("location");
-        if (cityLocation.has("time_zone")) {
-          return Optional.of(cityLocation.getString("time_zone"));
-        } else {
-          log.warn("No timezone entry for adress: {}", inetAddress);
-          return Optional.empty();
-        }
+        return Optional.ofNullable(city.get().getLocation().getTimeZone());
       });
     }
   }
