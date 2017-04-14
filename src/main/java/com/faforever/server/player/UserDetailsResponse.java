@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+import java.util.TimeZone;
+
 @Getter
 @RequiredArgsConstructor
 @ToString
@@ -13,7 +15,7 @@ public class UserDetailsResponse implements ServerMessage {
   private final int userId;
   private final String username;
   private final String country;
-  private final String timezone;
+  private final TimeZone timeZone;
   private final Player player;
 
   @Data

@@ -204,8 +204,8 @@ public class ClientServiceTest {
   @Test
   public void sendOnlinePlayerList() throws Exception {
     List<UserDetailsResponse> players = Arrays.asList(
-      new UserDetailsResponse(1, "JUnit", "CH", null),
-      new UserDetailsResponse(2, "JUnit2", "CH", null)
+      new UserDetailsResponse(1, "JUnit", "CH", null, null),
+      new UserDetailsResponse(2, "JUnit2", "CH", null, null)
     );
     ConnectionAware connectionAware = new Player().setClientConnection(clientConnection);
 

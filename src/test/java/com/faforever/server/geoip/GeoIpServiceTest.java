@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -53,20 +54,20 @@ public class GeoIpServiceTest {
 
   @Test
   public void lookupTimezone() throws Exception {
-    //Timezone data is not availabe for all ip adresses, alternatively use MaxMind server (108.168.255.243)
-    Optional<String> timezone = instance.lookupTimezone(InetAddress.getByName("85.214.28.212"));
-    assertThat(timezone.get(), is("Europe/Berlin"));
+    // Timezone data is not available for all ip addresses, alternatively use MaxMind server (108.168.255.243)
+    Optional<TimeZone> timeZone = instance.lookupTimezone(InetAddress.getByName("85.214.28.212"));
+    assertThat(timeZone.get().getID(), is("Europe/Berlin"));
   }
 
   @Test
   public void lookupTimezoneUnknownReturnsEmpty() throws Exception {
-    Optional<String> result = instance.lookupTimezone(InetAddress.getByName("192.203.230.10"));
+    Optional<TimeZone> result = instance.lookupTimezone(InetAddress.getByName("192.203.230.10"));
     assertThat(result.isPresent(), is(false));
   }
 
   @Test
   public void lookupTimezoneLoopbackReturnsEmpty() throws Exception {
-    Optional<String> result = instance.lookupTimezone(InetAddress.getLoopbackAddress());
+    Optional<TimeZone> result = instance.lookupTimezone(InetAddress.getLoopbackAddress());
     assertThat(result.isPresent(), is(false));
   }
 }

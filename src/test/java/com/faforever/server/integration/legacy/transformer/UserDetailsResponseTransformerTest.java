@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -23,6 +24,7 @@ public class UserDetailsResponseTransformerTest {
       1,
       TEST_USERNAME,
       "CH",
+      TimeZone.getTimeZone("Europe/Berlin"),
       new UserDetailsResponse.Player(
         new Rating(1200d, 200d),
         new Rating(900d, 100d),
@@ -51,6 +53,7 @@ public class UserDetailsResponseTransformerTest {
 
     assertThat(me.get("country"), is("CH"));
     assertThat(me.get("clan"), is("FOO"));
+    assertThat(me.get("time_zone"), is("Europe/Berlin"));
   }
 
   @Test
@@ -60,6 +63,7 @@ public class UserDetailsResponseTransformerTest {
       1,
       TEST_USERNAME,
       "CH",
+      TimeZone.getTimeZone("Europe/Berlin"),
       new UserDetailsResponse.Player(
         new Rating(1200d, 200d),
         new Rating(900d, 100d),
@@ -80,6 +84,7 @@ public class UserDetailsResponseTransformerTest {
       1,
       TEST_USERNAME,
       "CH",
+      TimeZone.getTimeZone("Europe/Berlin"),
       new UserDetailsResponse.Player(
         null,
         new Rating(900d, 100d),
@@ -100,6 +105,7 @@ public class UserDetailsResponseTransformerTest {
       1,
       TEST_USERNAME,
       "CH",
+      TimeZone.getTimeZone("Europe/Berlin"),
       new UserDetailsResponse.Player(
         new Rating(900d, 100d),
         null,
@@ -120,6 +126,7 @@ public class UserDetailsResponseTransformerTest {
       1,
       TEST_USERNAME,
       null,
+      null,
       new UserDetailsResponse.Player(
         new Rating(1200d, 200d),
         new Rating(900d, 100d),
@@ -131,5 +138,25 @@ public class UserDetailsResponseTransformerTest {
 
     Map<String, Object> me = (Map<String, Object>) result.get("me");
     assertThat(me.get("country"), is(""));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void transformHandleTimeZoneNull() throws Exception {
+    Map<String, Serializable> result = UserDetailsResponseTransformer.INSTANCE.transform(new UserDetailsResponse(
+      1,
+      TEST_USERNAME,
+      "CH",
+      null,
+      new UserDetailsResponse.Player(
+        new Rating(1200d, 200d),
+        new Rating(900d, 100d),
+        12,
+        null
+      )
+    ));
+
+    Map<String, Object> me = (Map<String, Object>) result.get("me");
+    assertThat(me.get("time_zone"), is(""));
   }
 }

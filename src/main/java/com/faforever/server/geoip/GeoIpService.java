@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.zip.GZIPInputStream;
 
 import static com.github.nocatch.NoCatch.noCatch;
@@ -64,23 +65,11 @@ public class GeoIpService {
   }
 
   public Optional<String> lookupCountryCode(InetAddress inetAddress) {
-    Optional<CityResponse> city = lookupCity(inetAddress);
-    return city.isPresent() ? Optional.of(city.get().getCountry().getIsoCode()) : Optional.empty();
+    return lookupCity(inetAddress).map(city -> city.getCountry().getIsoCode());
   }
 
-  /**
-   * @return Time zone code as specified by the IANA
-   */
-  public Optional<String> lookupTimezone(InetAddress inetAddress) {
-    Optional<CityResponse> city = lookupCity(inetAddress);
-
-    if (!city.isPresent()) {
-      return Optional.empty();
-    } else {
-      return noCatch(() -> {
-        return Optional.ofNullable(city.get().getLocation().getTimeZone());
-      });
-    }
+  public Optional<TimeZone> lookupTimezone(InetAddress inetAddress) {
+    return lookupCity(inetAddress).map(city -> city.getLocation().getTimeZone()).map(TimeZone::getTimeZone);
   }
 
   private Optional<CityResponse> lookupCity(InetAddress inetAddress) {

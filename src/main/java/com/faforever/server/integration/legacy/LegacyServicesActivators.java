@@ -71,7 +71,7 @@ public class LegacyServicesActivators {
       Player player = userDetails.getPlayer();
       player.setClientConnection(clientConnection);
       geoIpService.lookupCountryCode(clientConnection.getClientAddress()).ifPresent(player::setCountry);
-      geoIpService.lookupTimezone(clientConnection.getClientAddress()).ifPresent(player::setTimezone);
+      geoIpService.lookupTimezone(clientConnection.getClientAddress()).ifPresent(player::setTimeZone);
 
       uniqueIdService.verify(player, loginRequest.getUniqueId());
       chatService.updateIrcPassword(userDetails.getUsername(), loginRequest.getPassword());

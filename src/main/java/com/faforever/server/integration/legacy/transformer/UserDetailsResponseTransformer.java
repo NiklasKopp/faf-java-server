@@ -39,7 +39,8 @@ public enum UserDetailsResponseTransformer implements GenericTransformer<UserDet
       .put("ladder_rating", ladder1v1Rating != null ? new double[]{ladder1v1Rating.getMean(), ladder1v1Rating.getDeviation()} : new double[2])
       .put("number_of_games", globalRating != null ? player.getNumberOfGames() : 0)
       .put("country", Optional.ofNullable(source.getCountry()).orElse(""))
-      .put("timezone", Optional.ofNullable(source.getTimezone()).orElse(""));
+      .put("country", Optional.ofNullable(source.getCountry()).orElse(""))
+      .put("time_zone", source.getTimeZone() != null ? source.getTimeZone().getID() : "");
 
     Optional.ofNullable(source.getPlayer().getClanTag()).ifPresent(clan -> builder.put("clan", clan));
 

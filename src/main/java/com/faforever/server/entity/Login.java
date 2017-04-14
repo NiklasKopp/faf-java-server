@@ -14,6 +14,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import java.util.TimeZone;
 
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -52,5 +53,5 @@ public abstract class Login {
 
   @Transient
   @Nullable
-  private String timezone;
+  private TimeZone timeZone;
 }
