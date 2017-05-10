@@ -128,7 +128,7 @@ public class GameServiceTest {
       .setMap(map)
       .setFeaturedMod(new FeaturedMod())
       .setVictoryCondition(VictoryCondition.DEMORALIZATION)
-      .setStartTime(Timestamp.from(Instant.now().plusSeconds(999)));
+      .setStartTime(Timestamp.from(Instant.now().plusSeconds(999)).toInstant());
     game.getOptions().put(GameService.OPTION_FOG_OF_WAR, "explored");
     game.getOptions().put(GameService.OPTION_CHEATS_ENABLED, "false");
     game.getOptions().put(GameService.OPTION_PREBUILT_UNITS, "Off");
@@ -509,8 +509,8 @@ public class GameServiceTest {
     instance.updatePlayerGameState(PlayerGameState.LAUNCHING, player1);
 
     assertThat(game.getState(), is(GameState.PLAYING));
-    assertThat(game.getStartTime(), is(lessThan(Timestamp.from(Instant.now().plusSeconds(1)))));
-    assertThat(game.getStartTime(), is(greaterThan(Timestamp.from(Instant.now().minusSeconds(10)))));
+    assertThat(game.getStartTime(), is(lessThan(Timestamp.from(Instant.now().plusSeconds(1)).toInstant())));
+    assertThat(game.getStartTime(), is(greaterThan(Timestamp.from(Instant.now().minusSeconds(10)).toInstant())));
 
     verify(entityManager).persist(game);
     verify(clientService, atLeastOnce()).sendDelayed(any(GameResponse.class), any(), any(), any());

@@ -152,7 +152,8 @@ public class UserDetailsResponseTransformerTest {
         new Rating(1200d, 200d),
         new Rating(900d, 100d),
         12,
-        null
+        null,
+        "FOO"
       )
     ));
 
